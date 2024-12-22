@@ -31,7 +31,7 @@ sys_msg = SystemMessage(
 
 # Node
 def assistant(state: MessagesState):
-   return {"messages": [llm_with_tools.invoke([sys_msg] + state["messages"])]}
+    return {"messages": [llm_with_tools.invoke([sys_msg] + state["messages"])]}
 
 # Build graph
 builder = StateGraph(MessagesState)
