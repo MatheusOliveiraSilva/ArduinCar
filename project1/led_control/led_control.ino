@@ -1,20 +1,19 @@
-char command; // Variável para armazenar o comando recebido
+char command;
 
 void setup() {
-    pinMode(13, OUTPUT); // Configura o pino 13 como saída
-    Serial.begin(9600);  // Inicializa a comunicação serial a 9600 baud
-    Serial.println("Pronto para receber comandos!"); // Mensagem inicial
+    pinMode(13, OUTPUT);
+    Serial.begin(9600);
+    Serial.println("Pronto para receber comandos!");
 }
 
 void loop() {
-    // Verifica se há dados disponíveis na comunicação serial
     if (Serial.available()) {
-        command = Serial.read(); // Lê o comando enviado
+        command = Serial.read();
         if (command == '1') {
-            digitalWrite(13, HIGH); // Liga o LED
+            digitalWrite(13, HIGH);
             Serial.println("LED ligado!");
         } else if (command == '0') {
-            digitalWrite(13, LOW);  // Desliga o LED
+            digitalWrite(13, LOW);
             Serial.println("LED desligado!");
         } else {
             Serial.println("Comando inválido. Use '1' para ligar e '0' para desligar.");
