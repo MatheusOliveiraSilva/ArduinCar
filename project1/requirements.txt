@@ -3,5 +3,6 @@ langchain-core
 langchain-community
 langchain-openai
 python-dotenv
-serial
-time
+pyserial
+streamlit
+langgraph_sdk
