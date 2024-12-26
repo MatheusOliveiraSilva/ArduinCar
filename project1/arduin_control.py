@@ -1,19 +1,12 @@
 import serial
 import time
 
-# Configuração da porta serial
-# arduino = serial.Serial(port='/dev/cu.usbmodemXXXX', baudrate=9600, timeout=1)
-time.sleep(2)  # Aguarde 2 segundos para inicializar a comunicação
+# Configuração da conexão com o Arduino
+arduino = serial.Serial(port='/dev/cu.usbserial-120', baudrate=9600, timeout=1)
 
-def led_control(state):
-    """Envia comando para ligar/desligar o LED"""
-    # arduino.write(state.encode())
-
-    comando = ""
-    if state == '1':
-        comando = "LED ligado"
-    elif state == '0':
-        comando = "LED desligado"
-
-    return f"Comando enviado: {comando}"
-
+def enviar_comando(comando):
+    """Envia um comando para o Arduino via serial"""
+    arduino.write(comando.encode())  # Envia o comando como texto codificado
+    time.sleep(0.5)  # Aguarde um breve momento para o Arduino processar
+    resposta = arduino.readline().decode('utf-8').strip()  # Lê a resposta do Arduino
+    return resposta

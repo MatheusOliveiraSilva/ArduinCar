@@ -7,5 +7,8 @@
   "python_version": "3.11",
   "dependencies": [
     "."
+  ],
+  "devices": [
+          "/dev/cu.usbserial-120:/dev/cu.usbserial-120"
   ]
 }

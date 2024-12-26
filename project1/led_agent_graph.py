@@ -1,14 +1,16 @@
-from langchain_core.messages import SystemMessage
+from langchain_core.messages import SystemMessage, HumanMessage
 from langchain_openai import ChatOpenAI
 
 from langgraph.graph import START, StateGraph, MessagesState
 from langgraph.prebuilt import tools_condition, ToolNode
+from langgraph.checkpoint.memory import MemorySaver
 
 from dotenv import load_dotenv
-from arduin_control import led_control
+from arduin_control import enviar_comando as led_control
 
 load_dotenv()
-llm = ChatOpenAI(model_name="gpt-4o", temperature=0.7)
+llm = ChatOpenAI(model_name="gpt-4o-mini", temperature=0.7)
+memory = MemorySaver()
 
 def led_light_on() -> str:
     """
@@ -33,17 +35,26 @@ sys_msg = SystemMessage(
 def assistant(state: MessagesState):
     return {"messages": [llm_with_tools.invoke([sys_msg] + state["messages"])]}
 
-# Build graph
-builder = StateGraph(MessagesState)
+def get_graph():
+    # Build graph
+    builder = StateGraph(MessagesState)
 
-# Add nodes
-builder.add_node("assistant", assistant)
-builder.add_node("tools", ToolNode(tools))
+    # Add nodes
+    builder.add_node("assistant", assistant)
+    builder.add_node("tools", ToolNode(tools))
 
-# Add edges
-builder.add_edge(START, "assistant")
-builder.add_conditional_edges("assistant", tools_condition)
-builder.add_edge("tools", "assistant")
+    # Add edges
+    builder.add_edge(START, "assistant")
+    builder.add_conditional_edges("assistant", tools_condition)
+    builder.add_edge("tools", "assistant")
 
-# Compile graph
-graph = builder.compile()
+    # Compile graph
+    return builder.compile(checkpointer=memory)
+
+"""
+graph = get_graph()
+
+result = graph.invoke({"messages": [HumanMessage(content="turn led off")]})
+
+print(result["messages"])
+"""
